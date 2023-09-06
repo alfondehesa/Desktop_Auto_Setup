@@ -9,7 +9,8 @@
 ; Title names to ignore (use GET_WINDOW_INFORMATION.ahk tool to get title names, otherwise inspect desktop_configuration.txt after running this script to make sure you don't want to ignore any more titles)
 title_ignore := [
     "",
-    "Program Manager"
+    "Program Manager",
+    "NVIDIA GeForce Overlay"
 ]
 
 ; Process names to ignore (use GET_WINDOW_INFORMATION.ahk tool to get process names, otherwise inspect desktop_configuration.txt after running this script to make sure you don't want to ignore any more processes)
@@ -21,7 +22,18 @@ process_ignore := [
 ; Add one line for the app's name/process (you can find it with GET_WINDOW_INFORMATION.ahk), and add the next line for the corresponding executable path (i.e. "Name1", "Path1", "Process2", "Path2").
 ; This is especially useful for window store apps that are notoriously difficult to open through an executable. You can specify the path to a shortcut, etc.
 alternate_path_map := [
-
+    "calculator",
+    "calc.exe",
+    "Windows PowerShell",
+    "powershell",
+    "Command Prompt",
+    "cmd",
+    "WhatsApp",
+    A_ScriptDir "\Resources\App Shortcuts\WhatsApp - Shortcut.lnk",
+    "Spotify.exe",
+    "spotify.exe",
+    "Settings",
+    "ms-settings:"
 ]
 
 ; Delay amount (in milliseconds). Depending on your specific computer, setup, or apps that you want to open, you may adjust it higher/lower.
@@ -83,6 +95,10 @@ For id in ids
                     WinWaitNotActive(tmp_id,,20,,)
                     Sleep({})
                     tmp_id:="ahk_id " WinExist("a")
+                    if WinGetMinMax(tmp_id) != 0 {
+                        WinRestore(tmp_id)
+                        sleep(1000)
+                    }
                     WinMove({},{},{},{},tmp_id)
                 )", local_process, local_process_path, attribute, delay_amount, X_POS, Y_POS, WIDTH, HEIGH, delay_amount)
                 printout := printout composed_comands

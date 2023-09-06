@@ -6,7 +6,7 @@
 ; SETTINGS:
 
 ; How many monitors were your configurations set up for.
-monitor_count := 1
+monitor_count := 3
 
 ; BEGGINING OF CODE:
 
