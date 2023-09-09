@@ -23,7 +23,7 @@ local_process_path := WinGetProcessPath(id)
 attribute := attribute_mapping(local_process)
 
 ; Display properties
-MsgBox("Current Desktop Name: " current_desktop "`nDetected process title: " local_title "`nDetected process executable: " local_process "`nDetected address: " attribute "`nDetected process path: " local_process_path, "INFORMATION")
+MsgBox("Added process!" "`n`n Current Desktop Name: `n`n`t" current_desktop "`n`n`n`n`n Window ID:`n`n`t" id "`n`n`n`n`nDetected process title: `n`n`t" local_title "`n`n`n`n`nDetected process executable: `n`n`t" local_process "`n`n`n`n`nDetected address: `n`n`t" attribute "`n`n`n`n`nDetected process path: `n`n`t" local_process_path, "PROCESS FOUND!")
 
 ; This function returns specific attributes if the process matches a specified one (i.e. for chrome.exe it returns the address bar, for explorer.exe it returns the path)
 attribute_mapping(local_process){
@@ -32,13 +32,13 @@ attribute_mapping(local_process){
 
     ; Specific attribute maping of chrome --> Specified address
     if StrLower(local_process) = StrLower("chrome.exe") {
-        chrome_instance := UIA.ElementFromHandle("ahk_id " id)
+        chrome_instance := UIA.ElementFromHandle(id)
         attribute := chrome_instance.ElementFromPath("YYY/YLY4").value " --new-window"
     }
 
     ; Specific attribute maping of explorer --> Specified Directory
     if StrLower(local_process) = StrLower("explorer.exe") {
-        explorer_instance := UIA.ElementFromHandle("ahk_id " id)
+        explorer_instance := UIA.ElementFromHandle(id)
         attribute := LTrim(explorer_instance.ElementFromPath("YYrCYL").name, "Address: ")
     }
 

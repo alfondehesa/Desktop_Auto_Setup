@@ -1,18 +1,18 @@
 ﻿#Requires AutoHotkey v2.0
 #Include %A_ScriptDir%\Resources\get_desktop_name.ahk
+#Include %A_ScriptDir%\SETTINGS.ahk
+#Include %A_ScriptDir%\Resources\Window_control.ahk
 
 ; This file closes all windows and opens a predefined amount of windows in predefined locations.
-
-; SETTINGS:
-
-; How many monitors were your configurations set up for.
-monitor_count := 3
 
 ; BEGGINING OF CODE:
 
 ; Change this to your preferred hotkey to trigger
 ^F1::
 {
+	; Close all windows
+	close_windows()
+	
 	; Find name of virtual desktop
 	current_desktop := StrLower(VirtualDesktops.GetCurrentVirtualDesktopName())
 	
@@ -22,7 +22,7 @@ monitor_count := 3
 	}
 
 	; Close all current windows
-	close_windows() ; Close all windows in current virtual desktop
+	; close_windows() ; Close all windows in current virtual desktop
 
 	try {
 		RunWait( A_ScriptDir "\Virtual Desktops\" current_desktop ".ahk")
