@@ -51,7 +51,7 @@ close_windows() {
 			if not this_title = ""
 				{
 					; Close the window
-					winclose this_title
+					WinKill this_title
 				}
 		}
 	}

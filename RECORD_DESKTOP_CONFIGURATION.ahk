@@ -400,8 +400,8 @@ remap_path(current_path,local_title,local_process,dictionary) {
         return current_path
 
     for index, value in dictionary
-        if ((StrLower(value) = StrLower(local_title)) OR (StrLower(value) = StrLower(local_process))) AND (StrLower(local_process) != "explorer.exe")
-            return dictionary[index+1]
+        if ((StrLower(index) = StrLower(local_title)) OR (StrLower(index) = StrLower(local_process))) AND (StrLower(local_process) != "explorer.exe")
+            return dictionary[index]
 
     return current_path
 

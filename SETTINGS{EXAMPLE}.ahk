@@ -33,10 +33,10 @@ alternate_path_map := Map(
 )
 
 ; Delay amount (in milliseconds) to wait for a window to open. Depending on your specific computer, setup, or apps that you want to open, you may adjust it higher/lower.
-delay_amount_for_window_start := 1000
+delay_amount_for_window_start := 500
 
 ; Delay amount (in milliseconds) while moving the window. This can likely be smaller than the above.
-delay_amount_for_move := 200
+delay_amount_for_move := 400
 
 ; Verbose level.
 ; 0 For basic prompts.
