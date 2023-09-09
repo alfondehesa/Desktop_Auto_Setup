@@ -320,7 +320,7 @@ MsgBox(process_record, "Summary")
 init() {
 
     desktop := VirtualDesktops.GetCurrentVirtualDesktopName() ; Finds current desktop name
-    MsgBox "Adjust windows to your desired position and click OK." ; Gives user time to adjust windows
+    MsgBox "Adjust windows to your desired position and click OK.`n`nWARNING: When recording Google Chrome windows, save your progress first, as the windows will close during the recording process." ; Gives user time to adjust windows
     Sleep 1000 ; Gives time for the ahk window to close and not be detected
     
     ; Attempts to delete previous printout, if any

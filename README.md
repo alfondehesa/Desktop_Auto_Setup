@@ -7,7 +7,7 @@ This project uses the **AutoHotkey V2 platform** to **record the placement and t
 It accomplishes this by first **recording executable paths and positions for every opened window** (besides specified windows to ignore).
 It then **closes all windows**, and **calls every executable**, while **moving them** to the appropriate previously recorded location.
 
-Furthermore, it **supports some attributes at opening**, like opening the file explorer at a specific path, or a Chrome browser at a specific address. The user can also add their own automatically mapped attributes if desired.
+Furthermore, it **supports some attributes at opening**, like opening the file explorer at a specific path, or a Chrome browser with a specific set of tabs at specific addresses. The user can also add their own automatically mapped attributes if desired.
 
 **CONTENTS:**
 
@@ -17,8 +17,10 @@ Furthermore, it **supports some attributes at opening**, like opening the file e
     - [Add main script to your startup folder](#add-main-script-to-your-startup-folder)
   - [Usage](#usage)
     - [Create and rename your virtual desktop](#create-and-rename-your-virtual-desktop)
+    - [Set up your SETTINGS.ahk file](#set-up-your-settingsahk-file)
     - [Record your virtual desktop configuration](#record-your-virtual-desktop-configuration)
       - [Options](#options)
+      - [Custom attribute mapping](#custom-attribute-mapping)
     - [Trigger the script](#trigger-the-script)
     - [Get window information to set up custom ignore rules](#get-window-information-to-set-up-custom-ignore-rules)
 
@@ -48,6 +50,12 @@ Furthermore, it **supports some attributes at opening**, like opening the file e
 - If your active virtual desktop does not have a recorded configuration, the script will **fail**.
 - To start, **create your virtual desktop and rename it** to something recognizable, like "Programming" or "Administrative" or "Gaming" or "Browsing" or something along those lines. These are just some ideas.
 
+### Set up your SETTINGS.ahk file
+
+- Before you start, you will have to create your `SETTINGS.ahk` file.
+- In your project directory, you will notice a `SETTINGS{example}.ahk` file.
+- To get started, just rename this file to `SETTINGS.ahk` (remove the `{example}` part).
+
 ### Record your virtual desktop configuration
 
 - **Run** `RECORD_DESKTOP_CONFIGURATION.ahk` (you can double-click on it).
@@ -61,8 +69,7 @@ Furthermore, it **supports some attributes at opening**, like opening the file e
 #### Options
 
 - You can change some **parameters** for the `RECORD_DESKTOP_CONFIGURATION.ahk` script.
-- To do so, **open the file with a text editor**.
-- Under **SETTINGS**:
+- To do so, **open the `SETTINGS.ahk` file with a text editor**.
   - `title_ignore` is a list of string titles that if a window/process matches, will cause the script to ignore them at the time of making the configuration. By default, `""` and `"Program Manager"` are ignored, as these are system processes that do not necessarily correspond to a window. You can add more by adding to the list. Find out what title a specific window has by using `GET_WINDOW_INFORMATION.ahk` ([more info here](#get-window-information-to-set-up-custom-ignore-rules)) or by writing it down as the message is displayed while recording the desktop configuration with this script (you need to have `verbose` set to `1`, this is so by default).
   - `process_ignore` is the same as `title_ignore` but by process. By default, any empty processes `""` are also ignored. You can also add any string to this list. You can also find out the process corresponding to a specific window by using `GET_WINDOW_INFORMATION.ahk` ([more info here](#get-window-information-to-set-up-custom-ignore-rules)) or by writing it down as the message is displayed while recording the desktop configuration with this file (you need to have `verbose` set to `1`, this is so by default).
   - `alternate_map_path` is a list of titles or processes and corresponding, manually assigned execution paths. It is used to map a user specified execution path when a window with a specific process or name is detected.
@@ -73,7 +80,7 @@ Furthermore, it **supports some attributes at opening**, like opening the file e
     - This is an example of how `alternate_map_path` should look like:
 
     ```BASH
-    alternate_path_map := [
+    alternate_path_map := Map(
     "EXAMPLE_TITLE_1",
     "EXAMPLE_EXECUTABLE_PATH_1",
     "EXAMPLE_PROCESS_NAME_2",
@@ -84,21 +91,25 @@ Furthermore, it **supports some attributes at opening**, like opening the file e
     "C:\Program Files\Audacity\Audacity.exe",
     "WhatsApp",
     A_ScriptDir "\Resources\App Shortcuts\WhatsApp - Shortcut.lnk" ; This takes you to the App Shortcuts folder
-    ]
+    )
     ```
 
-    - `delay_amount` in milliseconds, is the amount of milliseconds the script waits for a window to open before attempting to move it. For software that takes a long time to open, such as a video game, you will want to make this value higher.
+    - `delay_amount_for_window_start` in milliseconds, is the amount of milliseconds the script waits for a window to open before attempting to move it. For software that takes a long time to open, such as a video game, you will want to make this value higher.
+    - `delay_amount_for_move` in milliseconds, is a delay for each subsequent move. Usually, it will be significantly lower than the previous delay. Setting this higher will increase reliability, with the trade-off of taking longer to set up your virtual desktop.
     - `verbose` is the level of verbose for the script. 1 Will print information for each window found and a summary of all windows/processes recorded. 0 Will only print the summary.
-    - `attribute_mapping()` is a function defined at the bottom of the file that uses the UIA library to map certain attributes to some specified processes. For instance, by default, if a Windows explorer window is found, it will use UIA to record the path and pass it as an argument when starting the window. Similarly, if a chrome.exe instance if found, it will read the address bar and store the address to open chrome with it next time.
 
-      - You can add an if statement to the function to add your own custom automatic attribute mapping. To do so, inside the project folder, in `\Resources\UIA-v2-main\Lib`, you will find `UIA.ahk`. Running this file will help you identify `ahk_id` numbers, `element names` and `element properties` for a specific element in a window.
-      - If you hover your mouse over your desired element (like an address bar or a search bar, or even a button) it will show you information and different properties of that element.
-      - Use the `UIA.ahk` window to figure out what property you are looking to extract (could be name, could be value, etc.).
-      - You can get the UIA path to the element that you want (at the bottom left of the window).
-      - Then, create a new if statement in the function, for whatever specific process you want (you can find out what process it is with `GET_WINDOW_INFORMATION.ahk` ([more info here](#get-window-information-to-set-up-custom-ignore-rules))).
-      - Use the functions located in the previous `if` statements and the UIA path to extract the element you wanted.
-      - Then, extract your desired property out of the element and return it.
-      - That's it! Remember to save the script.
+#### Custom attribute mapping
+
+- `attribute_mapping()` is a function defined at the bottom of the `RECORD_DESKTOP_CONFIGURATION.ahk` file that uses the UIA library to map certain attributes to some specified processes. For instance, by default, if a Windows explorer window is found, it will use UIA to record the path and pass it as an argument when starting the window. Similarly, if a chrome.exe instance if found, it will read the address bar for all tabs and store the addresses to open chrome with them next time.
+
+  - You can add an if statement to the function to add your own custom automatic attribute mapping. To do so, inside the project folder, in `\Resources\UIA-v2-main\Lib`, you will find `UIA.ahk`. Running this file will help you identify `ahk_id` numbers, `element names` and `element properties` for a specific element in a window.
+  - If you hover your mouse over your desired element (like an address bar or a search bar, or even a button) it will show you information and different properties of that element.
+  - Use the `UIA.ahk` window to figure out what property you are looking to extract (could be name, could be value, etc.).
+  - You can get the UIA path to the element that you want (at the bottom left of the window).
+  - Then, create a new if statement in the function, for whatever specific process you want (you can find out what process it is with `GET_WINDOW_INFORMATION.ahk` ([more info here](#get-window-information-to-set-up-custom-ignore-rules))).
+  - Use the functions located in the previous `if` statements and the UIA path to extract the element you wanted.
+  - Then, extract your desired property out of the element and return it.
+  - That's it! Remember to save the script.
 
 ### Trigger the script
 
